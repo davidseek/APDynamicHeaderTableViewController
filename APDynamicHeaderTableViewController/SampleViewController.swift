@@ -9,10 +9,10 @@
 import Foundation
 import UIKit
 
-class SampleViewController : APDynamicHeaderTableViewController {
+class SampleViewController: APDynamicHeaderTableViewController {
   override init() {
     super.init(
-    collapsedHeaderViewHeight: UIApplication.sharedApplication().statusBarFrame.height,
+    collapsedHeaderViewHeight: UIApplication.shared.statusBarFrame.height,
     expandedHeaderViewHeight: 75,
     headerExpandDelay: 100)
     
@@ -24,8 +24,10 @@ class SampleViewController : APDynamicHeaderTableViewController {
   }
 }
 
-extension SampleViewController : UITableViewDataSource {
-  override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+extension SampleViewController {
+    
+    
+  override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     return 20
   }
 }

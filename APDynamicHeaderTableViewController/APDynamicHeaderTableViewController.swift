@@ -10,14 +10,14 @@ import UIKit
 
 class APDynamicHeaderTableViewController : UIViewController {
   let headerView = APDynamicHeaderView ()
-  let tableView = UITableView (frame: CGRectZero, style: .Plain)
+  let tableView = UITableView (frame: CGRect.zero, style: .plain)
   
-  private var headerViewHeightConstraint = NSLayoutConstraint()
-  private var headerBeganCollapsed = false
-  private var collapsedHeaderViewHeight : CGFloat = UIApplication.sharedApplication().statusBarFrame.height
-  private var expandedHeaderViewHeight : CGFloat = 75
-  private var headerExpandDelay : CGFloat = 100
-  private var tableViewScrollOffsetBeginDraggingY : CGFloat = 0.0
+  fileprivate var headerViewHeightConstraint = NSLayoutConstraint()
+  fileprivate var headerBeganCollapsed = false
+  fileprivate var collapsedHeaderViewHeight : CGFloat = UIApplication.shared.statusBarFrame.height
+  fileprivate var expandedHeaderViewHeight : CGFloat = 75
+  fileprivate var headerExpandDelay : CGFloat = 100
+  fileprivate var tableViewScrollOffsetBeginDraggingY : CGFloat = 0.0
   
   /**
   Designated Initializer. Initializes table view controller and header view.
@@ -52,19 +52,19 @@ class APDynamicHeaderTableViewController : UIViewController {
   override func loadView() {
     super.loadView()
         
-    headerView.setTranslatesAutoresizingMaskIntoConstraints(false)
-    tableView.setTranslatesAutoresizingMaskIntoConstraints(false)
+    headerView.translatesAutoresizingMaskIntoConstraints = false
+    tableView.translatesAutoresizingMaskIntoConstraints = false
     
     view.addSubview(headerView)
     view.addSubview(tableView)
-    tableView.backgroundColor = UIColor.whiteColor()
+    tableView.backgroundColor = UIColor.white
     
     let views = ["headerView" : headerView, "tableView" : tableView]
-    view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[headerView]|", options: NSLayoutFormatOptions(0), metrics: nil, views: views))
-    view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[tableView]|", options: NSLayoutFormatOptions(0), metrics: nil, views: views))
-    view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[headerView][tableView]|", options: NSLayoutFormatOptions(0), metrics: nil, views: views))
+    view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[headerView]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: views))
+    view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[tableView]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: views))
+    view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[headerView][tableView]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: views))
 
-    headerViewHeightConstraint = NSLayoutConstraint(item: headerView, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: expandedHeaderViewHeight)
+    headerViewHeightConstraint = NSLayoutConstraint(item: headerView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: expandedHeaderViewHeight)
     view.addConstraint(headerViewHeightConstraint)
   }
   
@@ -78,7 +78,7 @@ class APDynamicHeaderTableViewController : UIViewController {
     }
     if (headerViewHeightConstraint.constant != expandedHeaderViewHeight && headerViewHeightConstraint.constant != collapsedHeaderViewHeight) {
       let animationDuration = 0.25
-      UIView.animateWithDuration(animationDuration, animations: { () -> Void in
+      UIView.animate(withDuration: animationDuration, animations: { () -> Void in
         self.headerViewHeightConstraint.constant = headerViewHeightDestinationConstant
         let progress = (self.headerViewHeightConstraint.constant - self.collapsedHeaderViewHeight) / (self.expandedHeaderViewHeight - self.collapsedHeaderViewHeight)
         self.headerView.expandToProgress(progress)
@@ -93,7 +93,7 @@ extension APDynamicHeaderTableViewController : UITableViewDelegate {
 }
 
 extension APDynamicHeaderTableViewController : UIScrollViewDelegate {
-  func scrollViewWillBeginDragging(scrollView: UIScrollView) {
+  func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
     // Clamp the beginning point to 0 and the max content offset to prevent unintentional resizing when dragging during rubber banding
     tableViewScrollOffsetBeginDraggingY = min(max(scrollView.contentOffset.y, 0), scrollView.contentSize.height - scrollView.frame.size.height)
     
@@ -101,9 +101,9 @@ extension APDynamicHeaderTableViewController : UIScrollViewDelegate {
     headerBeganCollapsed = (headerViewHeightConstraint.constant == collapsedHeaderViewHeight)
   }
   
-  func scrollViewDidScroll(scrollView: UIScrollView) {
+  func scrollViewDidScroll(_ scrollView: UIScrollView) {
     // Do nothing if the table view is not scrollable
-    if tableView.contentSize.height < CGRectGetHeight(tableView.bounds) {
+    if tableView.contentSize.height < tableView.bounds.height {
       return
     }
     var contentOffsetY = tableView.contentOffset.y - tableViewScrollOffsetBeginDraggingY
@@ -120,34 +120,34 @@ extension APDynamicHeaderTableViewController : UIScrollViewDelegate {
 
     // When the header view height is changing, freeze the content in the table view
     if headerViewHeightConstraint.constant != collapsedHeaderViewHeight && headerViewHeightConstraint.constant != expandedHeaderViewHeight {
-        tableView.contentOffset = CGPointMake(0, tableView.contentOffset.y - changeInHeaderViewHeight)
+        tableView.contentOffset = CGPoint(x: 0, y: tableView.contentOffset.y - changeInHeaderViewHeight)
     }
   }
   
   // Animate the header view when the user ends dragging or flicks the scroll view 
-  func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
+  func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
     animateHeaderViewHeight()
   }
   
-  func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+  func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
     animateHeaderViewHeight()
   }
 }
 
 extension APDynamicHeaderTableViewController : UITableViewDataSource {
-  func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     return 20
   }
   
-  func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     var tableViewCell : UITableViewCell
-    if let dequeuedTableViewCell = tableView.dequeueReusableCellWithIdentifier("Identifier") as? UITableViewCell {
+    if let dequeuedTableViewCell = tableView.dequeueReusableCell(withIdentifier: "Identifier") {
       tableViewCell = dequeuedTableViewCell
     } else {
-      tableViewCell = UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: "Identifier")
-      tableViewCell.selectionStyle = .None
+      tableViewCell = UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: "Identifier")
+      tableViewCell.selectionStyle = .none
     }
-    tableViewCell.textLabel?.text = String(indexPath.row)
+    tableViewCell.textLabel?.text = String((indexPath as NSIndexPath).row)
     return tableViewCell
   }
 }

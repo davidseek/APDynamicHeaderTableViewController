@@ -11,7 +11,7 @@ import UIKit
 class APDynamicHeaderView : UIView {
   
   var contentView = UIView()
-  private let textLabel = UILabel()
+  fileprivate let textLabel = UILabel()
   
   // MARK: Lifecycle
   
@@ -19,36 +19,36 @@ class APDynamicHeaderView : UIView {
   Designated Initializer. Defaults the size of the header view to the expanded size.
   */
   init() {
-    super.init(frame: CGRectZero)
+    super.init(frame: CGRect.zero)
     self.backgroundColor = UIColor(red: 0.2, green: 0.5, blue: 0.9, alpha: 1)
     
     addSubview(contentView)
 
-    contentView.backgroundColor = .clearColor()
-    contentView.setTranslatesAutoresizingMaskIntoConstraints(false)
+    contentView.backgroundColor = UIColor.clear
+    contentView.translatesAutoresizingMaskIntoConstraints = false
     
-    textLabel.setTranslatesAutoresizingMaskIntoConstraints(false)
+    textLabel.translatesAutoresizingMaskIntoConstraints = false
     textLabel.text = "Title"
-    textLabel.textAlignment = .Center
+    textLabel.textAlignment = .center
     textLabel.font = UIFont(name: "Helvetica Neue", size: 25)
     contentView.addSubview(textLabel)
     
     let views = ["contentView" : contentView, "textLabel" : textLabel]
-    let metrics = ["statusBarHeight" : UIApplication.sharedApplication().statusBarFrame.height]
-    addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[contentView]|", options: NSLayoutFormatOptions(0), metrics: nil, views: views))
-    addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[contentView]|", options: NSLayoutFormatOptions(0), metrics: nil, views: views))
+    let metrics = ["statusBarHeight" : UIApplication.shared.statusBarFrame.height]
+    addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[contentView]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: views))
+    addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[contentView]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: views))
     
-    contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[textLabel]|", options: NSLayoutFormatOptions(0), metrics: metrics, views: views))
-    contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-(statusBarHeight)-[textLabel]|", options: NSLayoutFormatOptions(0), metrics: metrics, views: views))
+    contentView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[textLabel]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: metrics, views: views))
+    contentView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-(statusBarHeight)-[textLabel]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: metrics, views: views))
   }
   
   required init(coder aDecoder: NSCoder) {
-    super.init(coder: aDecoder)
+    super.init(coder: aDecoder)!
   }
   
-  func expandToProgress(progress : CGFloat) {
+  func expandToProgress(_ progress : CGFloat) {
     contentView.alpha = progress
-    contentView.transform = CGAffineTransformMakeScale(progress, progress)
+    contentView.transform = CGAffineTransform(scaleX: progress, y: progress)
   }
   
 }
