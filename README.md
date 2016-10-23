@@ -11,7 +11,7 @@ A simple table view controller with a header view made as a recreation of the In
 
 Support for Cocoapods! Simply add the following to your Podfile:
 
-<code>pod 'APDynamicHeaderTableViewController', '~>0.1.1'</code>
+<code>pod 'APDynamicHeaderTableViewController', :git => 'https://github.com/davidseek/APDynamicHeaderTableViewController.git'</code>
 
 Drag and drop the APDynamicHeaderTableViewController.swift and APDynamicHeaderView.swift into your project. Subclass the APDynamicHeaderTableViewController class and set the tableview's data source and delegate to the new subclass.
 
